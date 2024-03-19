@@ -1,6 +1,6 @@
 const express = require('express')
 //const cors = require('cors')
-const routes = require('./routes/routes.js')
+const routes = require('./routes/routes')
 
 // Declarar la variable para el servidor web
 const app = express()
