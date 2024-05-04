@@ -3,17 +3,18 @@ require('dotenv').config()
 
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization']
-
-  if (!token) {
+  const access = token.split(' ')
+  console.log('@@ token => ', access[1])
+  if (!access[1]) {
     res.status(401).json({
       message: 'Unauthorized'
     })
   }
 
-  jwt.verify(token, process.env.SECRET, (err, user) => {
+  jwt.verify(access[1], process.env.SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({
-        message: 'Forbiden'
+        message: 'Forbidden'
       })
     }
     req.user = user

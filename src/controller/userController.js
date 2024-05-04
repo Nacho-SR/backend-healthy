@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { messaging } = require('firebase-admin')
 
 const loginUser = async (req, res) => {
   try {
@@ -27,7 +28,10 @@ const loginUser = async (req, res) => {
 
     // Generar el TOKEN
     const token = jwt.sign({ email:userDoc.email }, process.env.SECRET, { expiresIn: '1h' })
-    res.status(200).json({ token })
+    res.status(200).json({ 
+      message: 'success',
+      token
+    })
   } catch (error) {
     res.status(500).json({
       message: 'Internal Server Error'
@@ -58,4 +62,52 @@ const registerUser = async (req, res) => {
   }
 }
 
-module.exports = { registerUser, loginUser }
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.getAllUsers()
+    res.json({
+      users,
+      message: 'success'
+    })
+  } catch {
+    res.status(500).json({
+      message: 'Internal Server Error'
+    })
+  }
+}
+
+const deleteUser = async (req, res) => {
+  const userEmail = req.params.email
+  try {
+    await User.deleteUser(userEmail)
+    res.status(204).send()
+  } catch {
+    res.status(500).json({
+      message: 'Internal Server Error'
+    })
+  }
+}
+
+const updateUser = async (req, res) => {
+  const userEmail = req.params.email
+  const userData = req.body
+  try {
+    const updateUser = await User.updateUser(userEmail, userData)
+    res.json({
+      updateUser,
+      message: 'success'
+    })
+  } catch {
+    res.status(500).json({
+      message: 'Internal Server Error'
+    })
+  }
+}
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getAllUsers,
+  deleteUser,
+  updateUser
+}

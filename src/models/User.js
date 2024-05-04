@@ -4,10 +4,14 @@ const IUser = require('../interfaces/IUser')
 const firestore = admin.firestore()
 
 class User extends IUser {
-  constructor (email, password) {
+  constructor (email, password, apaterno, amaterno, direccion, telefono) {
     super()
     this.email = email
     this.password = password
+    this.apaterno = apaterno
+    this.amaterno = amaterno
+    this.direccion = direccion
+    this.telefono = telefono
   }
 
   static async createUser (email, password) {
@@ -41,6 +45,43 @@ class User extends IUser {
     } catch (error) {
       console.log('Error => ', error)
       throw new Error ('Error finding user')
+    }
+  }
+
+  static async getAllUsers () {
+    try {
+      const users = await firestore.collection('users').get()
+      const foundUsers = []
+      users.forEach(doc => {
+        foundUsers.push({
+          email: doc.email,
+          ...doc.data()
+        })
+      })
+
+      return foundUsers
+    } catch (error) {
+      throw error
+    }
+  }
+
+  static async deleteUser (userEmail) {
+    try {
+      await firestore.collection('users').doc(userEmail).delete()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  static async updateUser (userEmail, userData) {
+    try {
+      await firestore.collection('users').doc(userEmail).update(userData)
+      const userUpdated = await firestore.collection('users').doc(userEmail).get()
+      return {
+        userUpdated: userUpdated.data()
+      }
+    } catch (error) {
+      throw error
     }
   }
 }
