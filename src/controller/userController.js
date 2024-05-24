@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body
+    const { email, password, nombre, apaterno, amaterno, direccion, telefono } = req.body
     const existingUser = await User.findByEmail(email)
     if (existingUser) {
       return res.status(400).json({
@@ -49,7 +49,7 @@ const registerUser = async (req, res) => {
       })
     }
 
-    const newUser = await User.createUser(email, password)
+    const newUser = await User.createUser(email, password, nombre, apaterno, amaterno, direccion, telefono)
 
     res.status(201).json({
       message: 'User registered successfully',
