@@ -6,8 +6,8 @@ class IPatient {
     @returns {Promise<User>}
     @throws {error} si hay un error en la creacion
    */
-  static async createPatient (email, password) {}
-  static async findByName (email) {}
+  static async createPatient (nombre) {}
+  static async findByName (nombre) {}
 }
 
 module.exports = IPatient
