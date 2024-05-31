@@ -34,7 +34,7 @@ class Patient extends IPatient {
   static async findByName (nombre) {
     try {
       const patient = firestore.collection('patients').doc(nombre)
-      const patientDoc = await user.get()
+      const patientDoc = await patient.get()
       if (patientDoc.exists) {
         const patientData = patientDoc.data()
         return new Patient(patientData.nombre, patientData.email)
@@ -50,13 +50,28 @@ class Patient extends IPatient {
     try {
       const patients = await firestore.collection('patients').get()
       const foundPatients = []
-      patients.forEach(doc => {
-        foundPatients.push({
-          email: doc.email,
-          ...doc.data()
-        })
-      })
 
+      for (const doc of patients.docs) {
+        const patientData = {
+          id: doc.id, // Agrega el id del documento
+          ...doc.data()
+        }
+
+        // Obtener las recetas del paciente
+        const consultas = await firestore.collection('patients').doc(doc.id).collection('consultas').get();
+        const foundConsultas = [];
+
+        consultas.forEach(consultasDoc => {
+          foundConsultas.push({
+            id: consultasDoc.id,
+            ...consultasDoc.data()
+          })
+        })
+
+        patientData.consutlas = foundConsultas;
+        foundPatients.push(patientData);
+
+      }
       return foundPatients
     } catch (error) {
       throw error
