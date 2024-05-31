@@ -68,7 +68,7 @@ class Patient extends IPatient {
           })
         })
 
-        patientData.consutlas = foundConsultas;
+        patientData.consultas = foundConsultas;
         foundPatients.push(patientData);
 
       }
