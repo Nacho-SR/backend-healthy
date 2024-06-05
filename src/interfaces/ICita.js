@@ -6,8 +6,10 @@ class ICita {
     @returns {Promise<User>}
     @throws {error} si hay un error en la creacion
    */
+  static async isCitaDisponible(doctorId, pacienteId, fecha) {}
   static async createCita (cita) {}
-  static async findById (cita) {}
+  static async getCitas() {}
+  static async getCitasByPaciente(pacienteId) {}
 }
 
 module.exports = ICita
