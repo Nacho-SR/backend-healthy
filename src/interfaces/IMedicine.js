@@ -9,6 +9,7 @@ class IMedicine {
   static async isMedDisponible(medicine) {}
   static async buyCart (userId, carrito) {}
   static async getMedicines() {}
+  static async getMyMedicines(user) {}
 }
 
 module.exports = IMedicine

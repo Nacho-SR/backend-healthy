@@ -1,4 +1,3 @@
-const { buyCart } = require('../interfaces/IMedicine')
 const Medicine = require('../models/Medicine')
 const { messaging } = require('firebase-admin')
 
@@ -30,7 +29,21 @@ const comprarCarrito = async (req, res) => {
   }
 }
 
+const getMyMedicines = async (req, res) => {
+  const { doctorId } = req.body;
+  try {
+    const medicinas = await Medicine.getMyMedicines(doctorId)
+    res.status(201).json({
+      message: 'Medicina obtenida exitosamente.',
+      myMedicine: medicinas
+    })
+  } catch (error) {
+    res.status(500).send({ message: 'Error obteniendo la medicina', error: error.message });
+  }
+}
+
 module.exports = {
   getAllMedicines,
-  comprarCarrito
+  comprarCarrito,
+  getMyMedicines
 }

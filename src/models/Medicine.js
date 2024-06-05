@@ -55,6 +55,8 @@ class Medicine extends IMedicine {
         } else {
           batch.set(userMedicinaRef, {
             quantity: item.quantity,
+            descripcion: item.descripcion,
+            nombre: item.nombre,
             datePurchased: admin.firestore.FieldValue.serverTimestamp()
           });
         }
@@ -75,6 +77,20 @@ class Medicine extends IMedicine {
   static async getMedicines() {
     try{
       const medDocs = await firestore.collection('medicina').get()
+      const medicines = []
+      medDocs.forEach(doc => {
+        medicines.push({ id: doc.id, ...doc.data() });
+      })
+      return medicines;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getMyMedicines(user) {
+    try{
+      // console.log(user)
+      const medDocs = await firestore.collection('misMedicinas').doc(user).collection('medicina').get()
       const medicines = []
       medDocs.forEach(doc => {
         medicines.push({ id: doc.id, ...doc.data() });
